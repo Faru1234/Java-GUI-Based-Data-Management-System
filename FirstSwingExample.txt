@@ -1,0 +1,42 @@
+import javax.swing.*;
+import java.sql.*;
+
+public class SimpleGUI {
+    public static void main(String[] args) {
+        // Database connection parameters
+        String dbUrl = "jdbc:mysql://localhost:3306/your_database_name";
+        String username = "your_username";
+        String password = "your_password";
+
+        try {
+            // Establish the database connection
+            Connection connection = DriverManager.getConnection(dbUrl, username, password);
+
+            JFrame frame = new JFrame("Simple GUI");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(300, 200);
+
+            JButton button = new JButton("Click Me!");
+
+            // Perform database operations on button click
+            button.addActionListener(e -> {
+                try {
+                    // Insert data into the database when the button is clicked
+                    String insertQuery = "INSERT INTO simple_gui_data (column_name) VALUES (?)";
+                    PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+                    preparedStatement.setString(1, "Data to insert"); // Replace "Data to insert" with your data
+
+                    preparedStatement.executeUpdate();
+
+                    preparedStatement.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            frame.add(button);
+
+            frame.setVisible(true);
+        }
+    }
+}
